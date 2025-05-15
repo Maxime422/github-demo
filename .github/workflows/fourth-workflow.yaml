@@ -1,0 +1,14 @@
+name: Fourth Workflow
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Install Node
+        uses: actions/setup-node@v4
+      - name: Get dependencies
+        run: npm ci
+      - name: Build the app
+        run: npm run build
