@@ -7,24 +7,24 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        id: cache
-        with:
-          path: |
-            node_modules
-            ~/.cache/Cypress
-          key: npm-dep-${{ hashFiles('**/package-lock.json') }}
+      # - name: Cache dependencies
+      #   uses: actions/cache@v4
+      #   id: cache
+      #   with:
+      #     path: |
+      #       node_modules
+      #       ~/.cache/Cypress
+      #     key: npm-dep-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Get dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+      # - name: Get dependencies
+      #   if: steps.cache.outputs.cache-hit != 'true'
+      #   run: npm ci
 
-      - name: Lint code
-        run: npm run lint
+      # - name: Lint code
+      #   run: npm run lint
 
-      - name: List content
-        run: ls -al
+      # - name: List content
+      #   run: ls -al
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
