@@ -1,6 +1,9 @@
 name: Second Workflow 2
 on:
   push:
+    branches:
+      - master
+      - "releases/**"
   workflow_dispatch:
     inputs:
       display-bom:
