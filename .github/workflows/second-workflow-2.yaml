@@ -39,20 +39,29 @@ jobs:
         with:
           start: npm run dev
           wait-on: "http://localhost:5173"
+        env:
+          VITE_BACKEND_TOKEN: ${{ secrets.VITE_BACKEND_TOKEN }}
 
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get code
-        uses: actions/checkout@v4
       - name: Seed the database
         run: >
           PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost
           -U ${{ secrets.DB_USERNAME }}
           -d gh_db
           -f ${{ github.workspace }}/indus/data/init_db.sql
-      
+
+      - name: Start Postgres REST
+        run: >
+          docker run -d --rm --net=host
+          -e PGRST_JWT_SECRET="${{ secrets.PGRST_JWT_SECRET }}"
+          -e PGRST_DB_URI="postgres://${{ secrets.DB_USERNAME }}:${{ secrets.DB_PASSWORD }}@localhost/gh_db"
+          postgrest/postgrest
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v4
