@@ -12,7 +12,7 @@ jobs:
         with:
           path: |
             node_modules
-              ~/.cache/Cypress
+            ~/.cache/Cypress
           key: npm-dep-${{ hashFiles('**/package-lock.json') }}
 
       - name: Get dependencies
@@ -39,7 +39,7 @@ jobs:
         with:
           path: |
             node_modules
-              ~/.cache/Cypress
+            ~/.cache/Cypress
           key: npm-dep-${{ hashFiles('**/package-lock.json') }}
 
       - name: Get dependencies
