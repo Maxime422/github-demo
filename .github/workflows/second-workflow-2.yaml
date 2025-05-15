@@ -1,5 +1,12 @@
 name: Second Workflow 2
 on:
+  pull_request:
+    branches-ignore:
+      - test
+    types:
+      - opened
+
+
   push:
     branches:
       - master
@@ -77,6 +84,11 @@ jobs:
 
   deploy:
     needs: [build, lint]
+    if: github.event_name != 'pull_request'
     uses: ./.github/workflows/deploy.yml
     with:
       artifact-name: my-app
+  # post-deploy:
+  #   needs: deploy
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
