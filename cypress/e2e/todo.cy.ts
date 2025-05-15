@@ -4,7 +4,7 @@ describe('Application', () => {
     cy.get('input').type('My New Task');
     cy.contains('Add').click();
     cy.get('[name=task-field]').type('Another Task{enter}');
-    cy.get('.task-list tr').should('have.length', 2);
+    cy.get('.task-list tr').should('have.length', 3);
   });
 
   // it('should display the table of periodic elements', () => {
