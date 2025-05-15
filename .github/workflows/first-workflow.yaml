@@ -21,7 +21,7 @@ jobs:
     env:
       MY_ENV_VAR: "This is the end"
     steps:
-      - name: check file there.
+      - name: check file there
         run: |
           hostname
           echo "Value: $MY_ENV_VAR"
