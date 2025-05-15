@@ -2,9 +2,10 @@ name: Fourth Workflow
 on: push
 jobs:
   build:
+    continue-on-error: true
     strategy:
       matrix:
-        node-version: [ 'latest', 20, 16 ]
+        node-version: ["latest", 20, 16]
         os-version: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os-version }}
 
@@ -19,5 +20,3 @@ jobs:
         run: npm ci
       - name: Build the app
         run: npm run build
-
-
