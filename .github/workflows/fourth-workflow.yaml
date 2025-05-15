@@ -2,13 +2,22 @@ name: Fourth Workflow
 on: push
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 'latest', 20, 16 ]
+        os-version: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os-version }}
+
     steps:
       - name: Get code
         uses: actions/checkout@v4
       - name: Install Node
         uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Get dependencies
         run: npm ci
       - name: Build the app
         run: npm run build
+
+
