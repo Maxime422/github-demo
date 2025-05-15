@@ -1,0 +1,77 @@
+name: Second Workflow 2
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      display-bom:
+        required: false
+        type: "boolean"
+        default: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          wait-on: "http://localhost:5173"
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: npm-dep-${{ hashFiles('**/package-lock.json') }}
+      - name: Get dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Build the app
+        run: npm run lint
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      bom: ${{ steps.publish-bom.outputs.bom_list }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            node_modules
+            ~/.cache/Cypress
+          key: npm-dep-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Get dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Build the app
+        run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-app
+          path: dist
+      - name: Detail content
+        id: publish-bom
+        run: |
+          echo 'bom_list<<EOF' >> $GITHUB_OUTPUT
+          find dist -name '*.js' -exec echo '{}' \; >> $GITHUB_OUTPUT
+          echo EOF >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: [build, lint]
+    uses: ./.github/workflows/deploy.yml

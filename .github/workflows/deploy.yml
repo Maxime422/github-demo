@@ -1,0 +1,9 @@
+name: Reusable Deploy
+on: workflow_call
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pseudo Deployment
+        run: echo "Deploying App"
+      # Comment the rest
