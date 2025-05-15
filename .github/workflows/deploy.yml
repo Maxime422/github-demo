@@ -1,5 +1,11 @@
 name: Reusable Deploy
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: false
+        default: none
+        type: string
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -7,3 +13,9 @@ jobs:
       - name: Pseudo Deployment
         run: echo "Deploying App"
       # Comment the rest
+      - name: Get artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+      - name: Output artifacts
+        run: ls

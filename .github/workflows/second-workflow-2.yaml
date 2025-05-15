@@ -75,3 +75,5 @@ jobs:
   deploy:
     needs: [build, lint]
     uses: ./.github/workflows/deploy.yml
+    with:
+      artifact-name: my-app
