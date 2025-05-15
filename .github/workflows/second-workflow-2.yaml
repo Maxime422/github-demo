@@ -46,6 +46,13 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v4
+      - name: Seed the database
+        run: >
+          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h localhost
+          -U ${{ secrets.DB_USERNAME }}
+          -d gh_db
+          -f ${{ github.workspace }}/indus/data/init_db.sql
+      
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v4
